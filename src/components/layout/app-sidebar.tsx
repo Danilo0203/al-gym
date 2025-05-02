@@ -31,7 +31,6 @@ import {
 import { UserAvatarProfile } from '@/components/user-avatar-profile';
 import { navItems } from '@/constants/data';
 import { useMediaQuery } from '@/hooks/use-media-query';
-import { useUser } from '@clerk/nextjs';
 import {
   IconBell,
   IconChevronRight,
@@ -41,12 +40,26 @@ import {
   IconPhotoUp,
   IconUserCircle
 } from '@tabler/icons-react';
-import { SignOutButton } from '@clerk/nextjs';
 import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
+import type { User } from '@supabase/supabase-js';
 import { usePathname, useRouter } from 'next/navigation';
-import * as React from 'react';
 import { Icons } from '../icons';
 import { OrgSwitcher } from '../org-switcher';
+import SignOutBtn from '../sign-out-btn';
+import { useEffect } from 'react';
+import { createClient } from '@/utils/supabase/client';
+
+// ---- Supabase helpers ----
+const supabase = createClient();
+
+const fetchUser = async (): Promise<User | null> => {
+  const { data, error } = await supabase.auth.getUser();
+  if (error) throw error;
+  return data.user;
+};
+// --------------------------
+
 export const company = {
   name: 'Acme Inc',
   logo: IconPhotoUp,
@@ -62,25 +75,27 @@ const tenants = [
 export default function AppSidebar() {
   const pathname = usePathname();
   const { isOpen } = useMediaQuery();
-  const { user } = useUser();
   const router = useRouter();
-  const handleSwitchTenant = (_tenantId: string) => {
-    // Tenant switching functionality would be implemented here
-  };
+
+  const { data: user, isLoading: userLoading } = useQuery<User | null>({
+    queryKey: ['auth', 'user'],
+    queryFn: fetchUser,
+    staleTime: 1000 * 60 * 5 // cache for 5 minutes
+  });
 
   const activeTenant = tenants[0];
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Side effects based on sidebar state changes
   }, [isOpen]);
-
+  console.log(user);
   return (
     <Sidebar collapsible='icon'>
       <SidebarHeader>
         <OrgSwitcher
           tenants={tenants}
           defaultTenant={activeTenant}
-          onTenantSwitch={handleSwitchTenant}
+          // onTenantSwitch={handleSwitchTenant}
         />
       </SidebarHeader>
       <SidebarContent className='overflow-x-hidden'>
@@ -200,7 +215,7 @@ export default function AppSidebar() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                   <IconLogout className='mr-2 h-4 w-4' />
-                  <SignOutButton redirectUrl='/auth/sign-in' />
+                  <SignOutBtn />
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

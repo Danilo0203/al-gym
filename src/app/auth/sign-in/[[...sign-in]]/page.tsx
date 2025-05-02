@@ -1,28 +1,31 @@
-import { Metadata } from 'next';
-import SignInViewPage from '@/features/auth/components/sign-in-view';
+import { GalleryVerticalEnd } from 'lucide-react';
+import { LoginForm } from '@/features/auth/components/sign-in-view';
 
-export const metadata: Metadata = {
-  title: 'Authentication | Sign In',
-  description: 'Sign In page for authentication.'
-};
-
-export default async function Page() {
-  let stars = 3000; // Default value
-
-  try {
-    const response = await fetch(
-      'https://api.github.com/repos/kiranism/next-shadcn-dashboard-starter',
-      {
-        next: { revalidate: 86400 }
-      }
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-      stars = data.stargazers_count || stars; // Update stars if API response is valid
-    }
-  } catch (error) {
-    // Error fetching GitHub stars, using default value
-  }
-  return <SignInViewPage stars={stars} />;
+export default function LoginPage() {
+  return (
+    <div className='grid min-h-svh lg:grid-cols-2'>
+      <div className='flex flex-col gap-4 p-6 md:p-10'>
+        <div className='flex justify-center gap-2 md:justify-start'>
+          <a href='#' className='flex items-center gap-2 font-medium'>
+            <div className='bg-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded-md'>
+              <GalleryVerticalEnd className='size-4' />
+            </div>
+            Acme Inc.
+          </a>
+        </div>
+        <div className='flex flex-1 items-center justify-center'>
+          <div className='w-full max-w-xs'>
+            <LoginForm />
+          </div>
+        </div>
+      </div>
+      <div className='bg-muted relative hidden lg:block'>
+        <img
+          src='/placeholder.svg'
+          alt='Image'
+          className='absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale'
+        />
+      </div>
+    </div>
+  );
 }
