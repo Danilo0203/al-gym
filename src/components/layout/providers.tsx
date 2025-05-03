@@ -1,9 +1,9 @@
 'use client';
-import { useTheme } from 'next-themes';
+// import { useTheme } from 'next-themes';
 import React from 'react';
 import { ActiveThemeProvider } from '../active-theme';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
+import { Toaster } from 'sonner';
 export default function Providers({
   activeThemeValue,
   children
@@ -18,6 +18,7 @@ export default function Providers({
     <>
       <ActiveThemeProvider initialTheme={activeThemeValue}>
         <QueryClientProvider client={queryClient}>
+          <Toaster richColors closeButton />
           {children}
         </QueryClientProvider>
       </ActiveThemeProvider>

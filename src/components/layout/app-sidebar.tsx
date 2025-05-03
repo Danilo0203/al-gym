@@ -41,24 +41,12 @@ import {
   IconUserCircle
 } from '@tabler/icons-react';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
-import type { User } from '@supabase/supabase-js';
 import { usePathname, useRouter } from 'next/navigation';
 import { Icons } from '../icons';
 import { OrgSwitcher } from '../org-switcher';
 import SignOutBtn from '../sign-out-btn';
 import { useEffect } from 'react';
-import { createClient } from '@/utils/supabase/client';
-
-// ---- Supabase helpers ----
-const supabase = createClient();
-
-const fetchUser = async (): Promise<User | null> => {
-  const { data, error } = await supabase.auth.getUser();
-  if (error) throw error;
-  return data.user;
-};
-// --------------------------
+import { useUser } from '@/hooks/auth/useUser';
 
 export const company = {
   name: 'Acme Inc',
@@ -76,19 +64,12 @@ export default function AppSidebar() {
   const pathname = usePathname();
   const { isOpen } = useMediaQuery();
   const router = useRouter();
-
-  const { data: user, isLoading: userLoading } = useQuery<User | null>({
-    queryKey: ['auth', 'user'],
-    queryFn: fetchUser,
-    staleTime: 1000 * 60 * 5 // cache for 5 minutes
-  });
-
+  const { user } = useUser();
   const activeTenant = tenants[0];
 
   useEffect(() => {
     // Side effects based on sidebar state changes
   }, [isOpen]);
-  console.log(user);
   return (
     <Sidebar collapsible='icon'>
       <SidebarHeader>
@@ -171,7 +152,10 @@ export default function AppSidebar() {
                     <UserAvatarProfile
                       className='h-8 w-8 rounded-lg'
                       showInfo
-                      user={user}
+                      user={{
+                        email: user.email || '',
+                        display_name: user.user_metadata.display_name || ''
+                      }}
                     />
                   )}
                   <IconChevronsDown className='ml-auto size-4' />
@@ -189,7 +173,10 @@ export default function AppSidebar() {
                       <UserAvatarProfile
                         className='h-8 w-8 rounded-lg'
                         showInfo
-                        user={user}
+                        user={{
+                          email: user.email || '',
+                          display_name: user.user_metadata.display_name || ''
+                        }}
                       />
                     )}
                   </div>
@@ -214,7 +201,6 @@ export default function AppSidebar() {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <IconLogout className='mr-2 h-4 w-4' />
                   <SignOutBtn />
                 </DropdownMenuItem>
               </DropdownMenuContent>

@@ -14,12 +14,12 @@ export async function login(formData: LoginSchema) {
     return { error: error.message };
   }
 
-  redirect('/dashboard');
+  redirect('/panel/overview');
 }
 
 export async function logout() {
   const cookieStore = cookies();
   const supabase = await createClient(cookieStore);
   await supabase.auth.signOut(); // borra cookie sb:token
-  redirect('/login'); // vuelve al inicio
+  redirect('/auth/sign-in'); // vuelve al inicio
 }
