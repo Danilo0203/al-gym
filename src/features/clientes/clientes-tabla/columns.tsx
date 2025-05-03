@@ -27,7 +27,7 @@ export const columns: ColumnDef<Clientes>[] = [
     }
   },
   {
-    id: 'Nombre',
+    id: 'nombre',
     accessorKey: 'nombre',
     header: ({ column }: { column: Column<Clientes, unknown> }) => (
       <DataTableColumnHeader column={column} title='Nombre' />
@@ -44,7 +44,7 @@ export const columns: ColumnDef<Clientes>[] = [
     enableColumnFilter: true
   },
   {
-    id: 'Fecha de Inicio',
+    id: 'fechaInicio',
     accessorKey: 'fechaInicio',
     header: ({ column }: { column: Column<Clientes, unknown> }) => (
       <DataTableColumnHeader column={column} title='Fecha de Inicio' />
@@ -62,7 +62,7 @@ export const columns: ColumnDef<Clientes>[] = [
     }
   },
   {
-    id: 'Plan',
+    id: 'plan',
     accessorKey: 'plan',
     header: 'Plan',
     cell: ({ cell }) => {
@@ -71,7 +71,7 @@ export const columns: ColumnDef<Clientes>[] = [
     }
   },
   {
-    id: 'Teléfono',
+    id: 'telefono',
     accessorKey: 'phone',
     header: 'Teléfono',
     cell: ({ cell }) => {
@@ -80,7 +80,7 @@ export const columns: ColumnDef<Clientes>[] = [
     }
   },
   {
-    id: 'Estado',
+    id: 'estado',
     accessorKey: 'estado',
     header: 'Estado',
     cell: ({ cell }) => {

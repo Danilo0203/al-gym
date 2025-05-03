@@ -1,5 +1,4 @@
 import { newClient } from '@/actions/registro/actions';
-import { useQueryCliente } from '@/hooks/cliente/useQueryCliente';
 import {
   NuevoClienteSchema,
   nuevoClienteType
@@ -7,56 +6,33 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
-export const useNuevoClienteForm = (
-  onSuccess?: () => void,
-  clienteId?: string
-) => {
-  const { queryCliente } = useQueryCliente(clienteId);
-  const cliente = queryCliente.data?.data?.[0];
-  const date = new Date();
+export const useNuevoClienteForm = (onSuccess?: () => void, cliente?: any) => {
+  const date = useMemo(() => new Date(), []);
   const form = useForm<nuevoClienteType>({
     resolver: zodResolver(NuevoClienteSchema),
     defaultValues: {
-      nombre: '',
-      telefono: undefined,
-      fechaNacimiento: undefined,
-      sexo: undefined,
-      estatura: undefined,
-      peso: undefined,
-      tipoCuerpo: undefined,
+      nombre: cliente?.nombre ?? '',
+      telefono: cliente?.phone ?? undefined,
+      fechaNacimiento: cliente?.fechaNacimiento
+        ? new Date(cliente.fechaNacimiento)
+        : undefined,
+      sexo: cliente?.sexo ?? undefined,
+      estatura: cliente?.estatura ?? undefined,
+      peso: cliente?.peso ?? undefined,
+      tipoCuerpo: cliente?.tipoCuerpo ?? '',
       inscripcion: date,
-      plan: undefined,
-      valor: undefined,
+      plan: cliente?.plan ?? undefined,
+      valor: cliente?.valor ?? undefined,
       fechaInicio: date,
-      descuento: undefined,
-      total: undefined,
-      diasPorSemana: undefined
+      descuento: cliente?.descuento ?? undefined,
+      total: cliente?.total ?? undefined,
+      diasPorSemana: cliente?.diasPorSemana ?? undefined,
+      estado: cliente?.estado ?? undefined
     },
     mode: 'onChange'
   });
-  console.log(cliente);
-  useEffect(() => {
-    if (cliente) {
-      form.reset({
-        nombre: cliente.nombre ?? '',
-        telefono: cliente.telefono ?? undefined,
-        fechaNacimiento:  cliente.fechaNacimiento ?? undefined,
-        sexo: cliente.sexo ?? undefined,
-        estatura: cliente.estatura ?? undefined,
-        peso: cliente.peso ?? undefined,
-        tipoCuerpo: cliente.tipoCuerpo ?? undefined,
-        inscripcion: cliente.inscripcion ?? date,
-        plan: cliente.plan ?? undefined,
-        valor: cliente.valor ?? undefined,
-        fechaInicio: cliente.fechaInicio ?? date,
-        descuento: cliente.descuento ?? undefined,
-        total: cliente.total ?? undefined,
-        diasPorSemana: cliente.diasPorSemana ?? undefined
-      });
-    }
-  }, [cliente, form, date]);
 
   const onSumbit = async (data: nuevoClienteType) => {
     const error = await newClient(data);

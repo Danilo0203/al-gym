@@ -1,9 +1,11 @@
 import { Calendario } from '@/components/calendario';
+import { Badge } from '@/components/ui/badge';
 import { InputProps } from '@/components/input-props';
 // import { FileImage } from "@/components/file-image";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import {
   Tooltip,
   TooltipContent,
@@ -115,7 +118,6 @@ export const FormNuevoCliente = ({ form, onSumbit }: FormNuevoClienteProps) => {
               />
             )}
           />
-
           <FormField
             control={form.control}
             name='fechaNacimiento'
@@ -133,7 +135,6 @@ export const FormNuevoCliente = ({ form, onSumbit }: FormNuevoClienteProps) => {
               </FormItem>
             )}
           />
-
           <FormField
             name='sexo'
             control={form.control}
@@ -243,7 +244,6 @@ export const FormNuevoCliente = ({ form, onSumbit }: FormNuevoClienteProps) => {
               </FormItem>
             )}
           />
-
           <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
             <FormField
               name='plan'
@@ -356,6 +356,37 @@ export const FormNuevoCliente = ({ form, onSumbit }: FormNuevoClienteProps) => {
               );
             }}
           />
+          {form.getValues('estado') && (
+            <FormField
+              control={form.control}
+              name='estado'
+              render={({ field }) => (
+                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm'>
+                  <div className='flex gap-2'>
+                    <FormLabel>Estado</FormLabel>
+                    <FormDescription>
+                      <Badge
+                        variant='outline'
+                        className={`${field.value === '1' ? 'bg-green-500' : 'bg-red-500'}`}
+                      >
+                        {field.value === '1' ? 'Activo' : 'Inactivo'}
+                      </Badge>
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value === '1' ? true : false}
+                      onCheckedChange={(checked) =>
+                        field.onChange(checked ? '1' : '0')
+                      }
+                      disabled={isSubmitting}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
         </div>
       </form>
     </Form>

@@ -1,5 +1,5 @@
 'use client';
-import PageContainer from '@/components/layout/page-container';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -8,11 +8,11 @@ import { useNuevoClienteForm } from '@/hooks/registro/nuevoClienteForm.hook';
 import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
-export default function ClientesVista({ clienteId }: { clienteId?: string }) {
+export default function ClientesVista({ cliente }: { cliente?: any }) {
   const [activeTab, setActiveTab] = useState('datos-cliente');
   const { reset, form, onSumbit } = useNuevoClienteForm(
     () => setActiveTab('entrenamiento'),
-    clienteId
+    cliente
   );
   const { isSubmitting } = form.formState;
 
@@ -23,7 +23,6 @@ export default function ClientesVista({ clienteId }: { clienteId?: string }) {
     { value: 'pagos', label: 'Pagos' }
   ];
   return (
-    // <PageContainer>
     <Tabs
       value={activeTab}
       onValueChange={setActiveTab}
@@ -73,6 +72,5 @@ export default function ClientesVista({ clienteId }: { clienteId?: string }) {
         </Card>
       </TabsContent>
     </Tabs>
-    // </PageContainer>
   );
 }
