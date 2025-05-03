@@ -6,7 +6,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 
 export const useNuevoClienteForm = (onSuccess?: () => void, cliente?: any) => {
   const date = useMemo(() => new Date(), []);
