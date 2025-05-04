@@ -70,7 +70,7 @@ export const NuevoClienteSchema = z
       })
       .min(1, { message: 'Los días por semana deben ser al menos 1' })
       .max(7, { message: 'Los días por semana no pueden ser más de 7' }),
-    estado: z.enum(['1', '0']).default('1')
+    estado: z.enum(['1', '0', '2']).default('1')
   })
   .superRefine((data, ctx) => {
     const descuento = data.descuento ?? 0;
