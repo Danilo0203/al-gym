@@ -45,11 +45,20 @@ export async function getClientes(params: {
 
   // ---------- 4. post‑process ----------
   const usuarios = (data ?? []).map((u) => {
-    const vencido = isAfter(
-      new Date(),
-      calcularFechaFin(u.plan, u.fechaInicio)
-    );
-    return { ...u, estado: vencido ? '0' : '1' };
+    const hoy = new Date();
+    const inicio = new Date(u.fechaInicio);
+    const fin = calcularFechaFin(u.plan, u.fechaInicio);
+
+    let estado: string;
+    if (hoy < inicio) {
+      estado = '2'; // pendiente
+    } else if (hoy > fin) {
+      estado = '0'; // inactivo
+    } else {
+      estado = '1'; // activo
+    }
+
+    return { ...u, estado };
   });
 
   // update estados in parallel (non‑blocking for speed)
