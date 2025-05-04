@@ -363,7 +363,7 @@ export const FormNuevoCliente = ({ form, onSumbit }: FormNuevoClienteProps) => {
               render={({ field }) => (
                 <FormItem className='flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm'>
                   <div className='flex gap-2'>
-                    <FormLabel>Estado</FormLabel>
+                    <FormLabel htmlFor='estado'>Estado</FormLabel>
                     <FormDescription>
                       <Badge
                         variant='outline'
@@ -379,7 +379,8 @@ export const FormNuevoCliente = ({ form, onSumbit }: FormNuevoClienteProps) => {
                       onCheckedChange={(checked) =>
                         field.onChange(checked ? '1' : '0')
                       }
-                      disabled={isSubmitting}
+                      disabled
+                      id='estado'
                     />
                   </FormControl>
                   <FormMessage />
