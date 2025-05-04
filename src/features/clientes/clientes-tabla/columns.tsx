@@ -2,14 +2,13 @@
 import { Badge } from '@/components/ui/badge';
 import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-header';
 import { Column, ColumnDef } from '@tanstack/react-table';
-import { CheckCircle2, Text, XCircle } from 'lucide-react';
+import { CheckCircle2, CircleDashed, Text, XCircle } from 'lucide-react';
 import { CellAction } from './cell-action';
 import { Clientes } from '@/interfaces/Clientes.interfaces';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { toZonedTime } from 'date-fns-tz';
-import { CATEGORY_OPTIONS } from './options';
 export const columns: ColumnDef<Clientes>[] = [
   {
     id: 'Foto',
@@ -42,6 +41,19 @@ export const columns: ColumnDef<Clientes>[] = [
       icon: Text
     },
     enableColumnFilter: true
+  },
+  {
+    id: 'sexo',
+    accessorKey: 'sexo',
+    header: 'Sexo',
+    cell: ({ cell }) => {
+      const sexo = cell.getValue<Clientes['sexo']>();
+      return (
+        <div className='capitalize'>
+          {sexo === 'm' ? 'Masculino' : 'Femenino'}
+        </div>
+      );
+    }
   },
   {
     id: 'fechaInicio',
@@ -85,11 +97,28 @@ export const columns: ColumnDef<Clientes>[] = [
     header: 'Estado',
     cell: ({ cell }) => {
       const estado = cell.getValue<Clientes['estado']>();
-      const Icon = estado === '1' ? CheckCircle2 : XCircle;
+      let label = '';
+      let variant: 'active' | 'destructive' | 'secondary' = 'secondary';
+      let Icon = Text;
+
+      if (estado === '1') {
+        label = 'Activo';
+        variant = 'active';
+        Icon = CheckCircle2;
+      } else if (estado === '0') {
+        label = 'Inactivo';
+        variant = 'destructive';
+        Icon = XCircle;
+      } else if (estado === '2') {
+        label = 'Pendiente';
+        variant = 'secondary';
+        Icon = CircleDashed;
+      }
+
       return (
-        <Badge variant={estado === '1' ? 'active' : 'destructive'}>
-          <Icon />
-          {estado === '1' ? 'Activo' : 'Inactivo'}
+        <Badge variant={variant}>
+          <Icon className="mr-1 h-3 w-3" />
+          {label}
         </Badge>
       );
     },
@@ -99,7 +128,8 @@ export const columns: ColumnDef<Clientes>[] = [
       variant: 'select',
       options: [
         { label: 'Activo', value: '1' },
-        { label: 'Inactivo', value: '0' }
+        { label: 'Inactivo', value: '0' },
+        { label: 'Pendiente', value: '2' }
       ]
     }
   },
